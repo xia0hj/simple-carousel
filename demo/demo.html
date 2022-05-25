@@ -63,6 +63,7 @@
       cursor: pointer;
     }
 
+    /* @deprecated */
     .carousel-wrapper .carousel-btn.disabled {
       pointer-events: none;
     }
@@ -144,6 +145,7 @@
     const wrapper = document.querySelector('.carousel-wrapper')
     const imgWidth = wrapper.clientWidth
     const imgLength = imgList.children.length
+    let shouldBtnWait = false
 
 
     // 复制第一张图片，拼接到最后面，实现原本最后一张图片能向右切换成第一张图片
@@ -165,17 +167,18 @@
     btnRight.addEventListener('click', clickRight)
 
     function clickRight() {
-      makeBtnWait(btnRight, 500)
+      if (shouldBtnWait) return
+      lockBtn(btnRight, 500)
 
       curIdx = curIdx + 1
       changeImageLeft(imgList, curIdx, true)
 
       // 当前是末尾的复制首图，需要做特殊处理偷偷移到真正的第一张图片
       if (curIdx === imgLength) {
+        curIdx = 0
+        refreshNavItems(navItems, curIdx)
         setTimeout(() => {
-          curIdx = 0
           changeImageLeft(imgList, curIdx, false)
-          refreshNavItems(navItems, curIdx)
         }, 500)
       } else {
         refreshNavItems(navItems, curIdx)
@@ -183,7 +186,8 @@
     }
 
     btnLeft.addEventListener('click', () => {
-      makeBtnWait(btnLeft, 500)
+      if (shouldBtnWait) return
+      lockBtn(btnLeft, 500)
 
       curIdx = curIdx - 1
 
@@ -209,10 +213,10 @@
 
     // #region 自动轮播 
     let autoPlayId = setInterval(clickRight, AUTO_PLAY_INTERVAL)
-    wrapper.addEventListener('mouseenter', ()=>{
+    wrapper.addEventListener('mouseenter', () => {
       clearInterval(autoPlayId)
     })
-    wrapper.addEventListener('mouseleave', ()=>{
+    wrapper.addEventListener('mouseleave', () => {
       clearInterval(autoPlayId)
       autoPlayId = setInterval(clickRight, AUTO_PLAY_INTERVAL)
     })
@@ -231,11 +235,19 @@
 
     }
 
+    // @deprecated
     function makeBtnWait(buttonEL, delay) {
       buttonEL.classList.add('disabled')
       setTimeout(() => {
         buttonEL.classList.remove('disabled')
       }, delay)
+    }
+
+    function lockBtn(btnDom, lockTime) {
+      shouldBtnWait = true
+      setTimeout(() => {
+        shouldBtnWait = false
+      }, lockTime)
     }
 
     function refreshNavItems(navItems, curIndex) {
@@ -247,10 +259,12 @@
           navItems[i].classList.remove(activeClassName)
         }
       }
+
+
     }
 
     // #endregion 复用逻辑
-    
+
   </script>
 </body>
 
