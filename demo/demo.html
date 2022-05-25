@@ -34,7 +34,8 @@
       width: 100%;
       height: 100%;
       transition: 0.5s ease;
-      left: 0; /* 初始的 left 必须显式设定，否则第一次过渡动画不生效 */
+      left: 0;
+      /* 初始的 left 必须显式设定，否则第一次过渡动画不生效 */
     }
 
     .carousel-wrapper .carousel-image-list img {
@@ -137,21 +138,16 @@
     const imgLength = imgList.children.length
 
     // 复制第一张图片，拼接到最后面，实现原本最后一张图片能向右切换成第一张图片
-    const firstImg = imgList.children[0].cloneNode()
-    imgList.appendChild(firstImg)
+    const firstImg = imgList.children[0]
+    imgList.appendChild(firstImg.cloneNode())
 
     console.log(imgList)
 
     let curIdx = 0
-    btnLeft.addEventListener('click', () => {
-      curIdx = curIdx - 1
-      if (curIdx < 0) curIdx = imgLength - 1
-      imgList.style.left = `${-1 * curIdx * imgWidth}px`
-    })
+
     btnRight.addEventListener('click', () => {
       curIdx = curIdx + 1
-      imgList.style.left = `${-1 * curIdx * imgWidth}px`
-      imgList.style.transition = "0.5s ease" // 每次切换都要加上过渡效果
+      changeLeftWithTransition(imgList, curIdx)
       // 当前是末尾的复制首图，需要做特殊处理偷偷移到真正的第一张图片
       if (curIdx === imgLength) {
         setTimeout(() => {
@@ -161,6 +157,28 @@
         }, 500)
       }
     })
+
+    btnLeft.addEventListener('click', () => {
+      curIdx = curIdx - 1
+      // 从第一张图向左切换到最后一张图，在切换前需要偷偷把第一张图移到相同的末尾假图位置
+      if (curIdx === -1) {
+        imgList.style.transition = "none"
+        imgList.style.left = `${-1 * imgLength * imgWidth}px`
+        curIdx = imgLength - 1
+        // setTimeout 0 表示等上面的动画执行完再执行
+        setTimeout(() => {
+          changeLeftWithTransition(imgList, curIdx)
+        }, 0)
+      } else {
+        changeLeftWithTransition(imgList, curIdx)
+      }
+
+    })
+
+    function changeLeftWithTransition(imgListDom, curIdx) {
+      imgListDom.style.transition = "0.5s ease" // 每次切换都要加上过渡效果
+      imgListDom.style.left = `${-1 * curIdx * imgWidth}px`
+    }
   </script>
 </body>
 
