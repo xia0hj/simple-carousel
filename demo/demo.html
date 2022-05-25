@@ -142,6 +142,7 @@
     const wrapper = document.querySelector('.carousel-wrapper')
     const imgWidth = wrapper.clientWidth
     const imgLength = imgList.children.length
+    const navItems = document.querySelectorAll('.nav-item')
 
     // 复制第一张图片，拼接到最后面，实现原本最后一张图片能向右切换成第一张图片
     const firstImg = imgList.children[0]
@@ -161,7 +162,10 @@
           imgList.style.transition = "none"
           curIdx = 0
           imgList.style.left = '0px'
+          refreshNavItems(navItems, curIdx)
         }, 500)
+      }else{
+        refreshNavItems(navItems, curIdx)
       }
     })
 
@@ -173,14 +177,16 @@
         imgList.style.transition = "none"
         imgList.style.left = `${-1 * imgLength * imgWidth}px`
         curIdx = imgLength - 1
+        refreshNavItems(navItems, curIdx)
         // setTimeout 0 表示等上面的动画执行完再执行
         setTimeout(() => {
           changeLeftWithTransition(imgList, curIdx)
         }, 0)
       } else {
         changeLeftWithTransition(imgList, curIdx)
+        refreshNavItems(navItems, curIdx)
       }
-
+      
     })
 
     function changeLeftWithTransition(imgListDom, curIdx) {
@@ -193,6 +199,17 @@
       setTimeout(()=>{
         buttonEL.classList.remove('disabled')
       }, delay)
+    }
+
+    function refreshNavItems(navItems, curIndex){
+      const activeClassName = 'active'
+      for(let i=0; i<navItems.length; i++){
+        if(i === curIndex){
+          navItems[i].classList.add(activeClassName)
+        }else{
+          navItems[i].classList.remove(activeClassName)
+        }
+      }
     }
   </script>
 </body>
