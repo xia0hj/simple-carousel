@@ -60,6 +60,11 @@
       line-height: 70px;
       text-decoration: none;
       color: white;
+      cursor: pointer;
+    }
+
+    .carousel-wrapper .carousel-btn.disabled {
+      pointer-events: none;
     }
 
     .carousel-wrapper .carousel-btn.btn-left {
@@ -114,8 +119,8 @@
         <img src="./images/pic6.webp" />
       </div>
 
-      <a href="javascript:;" class="carousel-btn btn-left">&lt;</a>
-      <a href="javascript:;" class="carousel-btn btn-right">&gt;</a>
+      <button class="carousel-btn btn-left">&lt;</button>
+      <button class="carousel-btn btn-right">&gt;</button>
 
       <ul class="carousel-nav">
         <li class="nav-item active"></li>
@@ -124,6 +129,7 @@
         <li class="nav-item"></li>
         <li class="nav-item"></li>
         <li class="nav-item"></li>
+      </ul>
     </div>
 
   </div>
@@ -146,6 +152,7 @@
     let curIdx = 0
 
     btnRight.addEventListener('click', () => {
+      makeBtnWait(btnRight, 500)
       curIdx = curIdx + 1
       changeLeftWithTransition(imgList, curIdx)
       // 当前是末尾的复制首图，需要做特殊处理偷偷移到真正的第一张图片
@@ -159,6 +166,7 @@
     })
 
     btnLeft.addEventListener('click', () => {
+      makeBtnWait(btnLeft, 500)
       curIdx = curIdx - 1
       // 从第一张图向左切换到最后一张图，在切换前需要偷偷把第一张图移到相同的末尾假图位置
       if (curIdx === -1) {
@@ -178,6 +186,13 @@
     function changeLeftWithTransition(imgListDom, curIdx) {
       imgListDom.style.transition = "0.5s ease" // 每次切换都要加上过渡效果
       imgListDom.style.left = `${-1 * curIdx * imgWidth}px`
+    }
+
+    function makeBtnWait(buttonEL, delay){
+      buttonEL.classList.add('disabled')
+      setTimeout(()=>{
+        buttonEL.classList.remove('disabled')
+      }, delay)
     }
   </script>
 </body>
