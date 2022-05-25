@@ -22,7 +22,7 @@
 
     /* 组件顶层容器 */
     .carousel-wrapper {
-      /* overflow: hidden; */
+      overflow: hidden;
       width: 100%;
       height: 100%;
     }
@@ -30,9 +30,13 @@
     /* 中间图片 */
     .carousel-wrapper .carousel-image-list {
       display: flex;
+      position: relative;
       width: 100%;
       height: 100%;
+      transition: 0.5s ease;
+      left: 0; /* 初始的 left 必须显式设定，否则第一次过渡动画不生效 */
     }
+
     .carousel-wrapper .carousel-image-list img {
       width: 100%;
     }
@@ -45,7 +49,7 @@
       height: 70px;
 
       /* 相对于 outer 来定位，先让按钮框的顶部贴着垂直方向的中间，然后自身上移 50% 使得按钮中线与 outer 中线重合 */
-      position: absolute; 
+      position: absolute;
       top: 50%;
       transform: translate(0, -50%);
 
@@ -56,10 +60,12 @@
       text-decoration: none;
       color: white;
     }
-    .carousel-wrapper .carousel-btn.left {
+
+    .carousel-wrapper .carousel-btn.btn-left {
       left: 0;
     }
-    .carousel-wrapper .carousel-btn.right {
+
+    .carousel-wrapper .carousel-btn.btn-right {
       right: 0;
     }
 
@@ -78,17 +84,18 @@
 
       list-style: none;
     }
-    .carousel-nav > .nav-item {
+
+    .carousel-nav>.nav-item {
       width: 20px;
       height: 20px;
       border-radius: 50%;
       background-color: white;
       margin: 0 5px;
     }
-    .carousel-nav > .nav-item.active {
+
+    .carousel-nav>.nav-item.active {
       background-color: lightcoral;
     }
-
   </style>
 </head>
 
@@ -106,8 +113,8 @@
         <img src="./images/pic6.webp" />
       </div>
 
-      <a href="javascript:;" class="carousel-btn left">&lt;</a>
-      <a href="javascript:;" class="carousel-btn right">&gt;</a>
+      <a href="javascript:;" class="carousel-btn btn-left">&lt;</a>
+      <a href="javascript:;" class="carousel-btn btn-right">&gt;</a>
 
       <ul class="carousel-nav">
         <li class="nav-item active"></li>
@@ -119,16 +126,41 @@
     </div>
 
   </div>
-  </div>
-
-
-
-
-
 
 
   <script>
+    const btnLeft = document.querySelector('.btn-left')
+    const btnRight = document.querySelector('.btn-right')
+    const imgList = document.querySelector('.carousel-image-list')
+    const wrapper = document.querySelector('.carousel-wrapper')
+    const imgWidth = wrapper.clientWidth
+    const imgLength = imgList.children.length
 
+    // 复制第一张图片，拼接到最后面，实现原本最后一张图片能向右切换成第一张图片
+    const firstImg = imgList.children[0].cloneNode()
+    imgList.appendChild(firstImg)
+
+    console.log(imgList)
+
+    let curIdx = 0
+    btnLeft.addEventListener('click', () => {
+      curIdx = curIdx - 1
+      if (curIdx < 0) curIdx = imgLength - 1
+      imgList.style.left = `${-1 * curIdx * imgWidth}px`
+    })
+    btnRight.addEventListener('click', () => {
+      curIdx = curIdx + 1
+      imgList.style.left = `${-1 * curIdx * imgWidth}px`
+      imgList.style.transition = "0.5s ease" // 每次切换都要加上过渡效果
+      // 当前是末尾的复制首图，需要做特殊处理偷偷移到真正的第一张图片
+      if (curIdx === imgLength) {
+        setTimeout(() => {
+          imgList.style.transition = "none"
+          curIdx = 0
+          imgList.style.left = '0px'
+        }, 500)
+      }
+    })
   </script>
 </body>
 
