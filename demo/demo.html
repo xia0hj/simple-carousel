@@ -137,6 +137,7 @@
 
   <script>
     let curIdx = 0
+    const AUTO_PLAY_INTERVAL = 2000 // 2 秒自动轮播
     const btnLeft = document.querySelector('.btn-left')
     const btnRight = document.querySelector('.btn-right')
     const imgList = document.querySelector('.carousel-image-list')
@@ -159,9 +160,11 @@
       })
     })
 
+    // #region 左右按钮
 
+    btnRight.addEventListener('click', clickRight)
 
-    btnRight.addEventListener('click', () => {
+    function clickRight() {
       makeBtnWait(btnRight, 500)
 
       curIdx = curIdx + 1
@@ -177,7 +180,7 @@
       } else {
         refreshNavItems(navItems, curIdx)
       }
-    })
+    }
 
     btnLeft.addEventListener('click', () => {
       makeBtnWait(btnLeft, 500)
@@ -186,7 +189,7 @@
 
       // 从第一张图向左切换到最后一张图，在切换前需要偷偷把第一张图移到相同的末尾假图位置
       if (curIdx === -1) {
-        
+
         changeImageLeft(imgList, imgLength, false)
         curIdx = imgLength - 1
         refreshNavItems(navItems, curIdx)
@@ -201,6 +204,22 @@
       }
 
     })
+
+    // #endregion 左右按钮
+
+    // #region 自动轮播 
+    let autoPlayId = setInterval(clickRight, AUTO_PLAY_INTERVAL)
+    wrapper.addEventListener('mouseenter', ()=>{
+      clearInterval(autoPlayId)
+    })
+    wrapper.addEventListener('mouseleave', ()=>{
+      clearInterval(autoPlayId)
+      autoPlayId = setInterval(clickRight, AUTO_PLAY_INTERVAL)
+    })
+
+    // #endregion 自动轮播 
+
+    // #region 复用逻辑
 
     function changeImageLeft(imgListDom, index, isWithTransition) {
       if (isWithTransition) {
@@ -229,6 +248,9 @@
         }
       }
     }
+
+    // #endregion 复用逻辑
+    
   </script>
 </body>
 
