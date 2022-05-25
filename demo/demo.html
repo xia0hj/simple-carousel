@@ -152,6 +152,14 @@
 
     let curIdx = 0
 
+    navItems.forEach((item, index) => {
+      item.addEventListener('click', () => {
+        curIdx = index
+        changeLeftWithTransition(imgList, index)
+        refreshNavItems(navItems, index)
+      })
+    })
+
     btnRight.addEventListener('click', () => {
       makeBtnWait(btnRight, 500)
       curIdx = curIdx + 1
@@ -164,7 +172,7 @@
           imgList.style.left = '0px'
           refreshNavItems(navItems, curIdx)
         }, 500)
-      }else{
+      } else {
         refreshNavItems(navItems, curIdx)
       }
     })
@@ -186,7 +194,7 @@
         changeLeftWithTransition(imgList, curIdx)
         refreshNavItems(navItems, curIdx)
       }
-      
+
     })
 
     function changeLeftWithTransition(imgListDom, curIdx) {
@@ -194,19 +202,19 @@
       imgListDom.style.left = `${-1 * curIdx * imgWidth}px`
     }
 
-    function makeBtnWait(buttonEL, delay){
+    function makeBtnWait(buttonEL, delay) {
       buttonEL.classList.add('disabled')
-      setTimeout(()=>{
+      setTimeout(() => {
         buttonEL.classList.remove('disabled')
       }, delay)
     }
 
-    function refreshNavItems(navItems, curIndex){
+    function refreshNavItems(navItems, curIndex) {
       const activeClassName = 'active'
-      for(let i=0; i<navItems.length; i++){
-        if(i === curIndex){
+      for (let i = 0; i < navItems.length; i++) {
+        if (i === curIndex) {
           navItems[i].classList.add(activeClassName)
-        }else{
+        } else {
           navItems[i].classList.remove(activeClassName)
         }
       }
