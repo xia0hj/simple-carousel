@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* 组件外 */
+    .outer {
+      width: 800px;
+      height: 400px;
+      position: relative;
+      margin: auto;
+    }
+
+    /* 组件顶层容器 */
+    .carousel-wrapper {
+      /* overflow: hidden; */
+      width: 100%;
+      height: 100%;
+    }
+
+    /* 中间图片 */
+    .carousel-wrapper .carousel-image-list {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+    .carousel-wrapper .carousel-image-list img {
+      width: 100%;
+    }
+
+    /* 左右按钮 */
+    .carousel-wrapper .carousel-btn {
+      /* 设为块元素才能指定宽高 */
+      display: block;
+      width: 40px;
+      height: 70px;
+
+      /* 相对于 outer 来定位，先让按钮框的顶部贴着垂直方向的中间，然后自身上移 50% 使得按钮中线与 outer 中线重合 */
+      position: absolute; 
+      top: 50%;
+      transform: translate(0, -50%);
+
+      background-color: rgba(0, 0, 0, 0.7);
+      font-size: 30px;
+      text-align: center;
+      line-height: 70px;
+      text-decoration: none;
+      color: white;
+    }
+    .carousel-wrapper .carousel-btn.left {
+      left: 0;
+    }
+    .carousel-wrapper .carousel-btn.right {
+      right: 0;
+    }
+
+    /* 底部导航 */
+    .carousel-nav {
+      display: flex;
+
+      /* 相对于 outer 来定位，离底部 20px */
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translate(-50%, 0);
+
+      height: 20px;
+      z-index: 8;
+
+      list-style: none;
+    }
+    .carousel-nav > .nav-item {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: white;
+      margin: 0 5px;
+    }
+    .carousel-nav > .nav-item.active {
+      background-color: lightcoral;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="outer">
+    <div class="carousel-wrapper">
+
+      <div class="carousel-image-list">
+        <img src="./images/pic1.webp" />
+        <img src="./images/pic2.webp" />
+        <img src="./images/pic3.webp" />
+        <img src="./images/pic4.webp" />
+        <img src="./images/pic5.webp" />
+        <img src="./images/pic6.webp" />
+      </div>
+
+      <a href="javascript:;" class="carousel-btn left">&lt;</a>
+      <a href="javascript:;" class="carousel-btn right">&gt;</a>
+
+      <ul class="carousel-nav">
+        <li class="nav-item active"></li>
+        <li class="nav-item"></li>
+        <li class="nav-item"></li>
+        <li class="nav-item"></li>
+        <li class="nav-item"></li>
+        <li class="nav-item"></li>
+    </div>
+
+  </div>
+  </div>
+
+
+
+
+
+
+
+  <script>
+
+  </script>
+</body>
+
+</html>
