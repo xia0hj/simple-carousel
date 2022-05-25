@@ -136,40 +136,42 @@
 
 
   <script>
+    let curIdx = 0
     const btnLeft = document.querySelector('.btn-left')
     const btnRight = document.querySelector('.btn-right')
     const imgList = document.querySelector('.carousel-image-list')
     const wrapper = document.querySelector('.carousel-wrapper')
     const imgWidth = wrapper.clientWidth
     const imgLength = imgList.children.length
-    const navItems = document.querySelectorAll('.nav-item')
+
 
     // 复制第一张图片，拼接到最后面，实现原本最后一张图片能向右切换成第一张图片
     const firstImg = imgList.children[0]
     imgList.appendChild(firstImg.cloneNode())
 
-    console.log(imgList)
-
-    let curIdx = 0
-
+    // 给底部圆点加上点击快速切换
+    const navItems = document.querySelectorAll('.nav-item')
     navItems.forEach((item, index) => {
       item.addEventListener('click', () => {
         curIdx = index
-        changeLeftWithTransition(imgList, index)
+        changeImageLeft(imgList, index, true)
         refreshNavItems(navItems, index)
       })
     })
 
+
+
     btnRight.addEventListener('click', () => {
       makeBtnWait(btnRight, 500)
+
       curIdx = curIdx + 1
-      changeLeftWithTransition(imgList, curIdx)
+      changeImageLeft(imgList, curIdx, true)
+
       // 当前是末尾的复制首图，需要做特殊处理偷偷移到真正的第一张图片
       if (curIdx === imgLength) {
         setTimeout(() => {
-          imgList.style.transition = "none"
           curIdx = 0
-          imgList.style.left = '0px'
+          changeImageLeft(imgList, curIdx, false)
           refreshNavItems(navItems, curIdx)
         }, 500)
       } else {
@@ -179,27 +181,35 @@
 
     btnLeft.addEventListener('click', () => {
       makeBtnWait(btnLeft, 500)
+
       curIdx = curIdx - 1
+
       // 从第一张图向左切换到最后一张图，在切换前需要偷偷把第一张图移到相同的末尾假图位置
       if (curIdx === -1) {
-        imgList.style.transition = "none"
-        imgList.style.left = `${-1 * imgLength * imgWidth}px`
+        
+        changeImageLeft(imgList, imgLength, false)
         curIdx = imgLength - 1
         refreshNavItems(navItems, curIdx)
+
         // setTimeout 0 表示等上面的动画执行完再执行
         setTimeout(() => {
-          changeLeftWithTransition(imgList, curIdx)
+          changeImageLeft(imgList, curIdx, true)
         }, 0)
       } else {
-        changeLeftWithTransition(imgList, curIdx)
+        changeImageLeft(imgList, curIdx, true)
         refreshNavItems(navItems, curIdx)
       }
 
     })
 
-    function changeLeftWithTransition(imgListDom, curIdx) {
-      imgListDom.style.transition = "0.5s ease" // 每次切换都要加上过渡效果
-      imgListDom.style.left = `${-1 * curIdx * imgWidth}px`
+    function changeImageLeft(imgListDom, index, isWithTransition) {
+      if (isWithTransition) {
+        imgListDom.style.transition = "0.5s ease"
+      } else {
+        imgListDom.style.transition = "none"
+      }
+      imgListDom.style.left = `${-1 * index * imgWidth}px`
+
     }
 
     function makeBtnWait(buttonEL, delay) {
